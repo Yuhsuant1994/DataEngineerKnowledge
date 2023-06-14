@@ -1,0 +1,64 @@
+GET /1992947970/_search
+{
+  "explain": false,
+  "_source": {
+    "includes": [
+      "id",
+      "outer_id",
+      "created_at",
+      "name",
+      "brand",
+      "price",
+      "sale_price",
+      "price_currency",
+      "availability_type",
+      "url",
+      "image_url",
+      "description",
+      "attributes",
+      "product_types",
+      "terms"
+    ]
+  },
+  "query": {
+    "bool": {
+      "minimum_should_match": 1,
+      "should": [
+        {
+          "simple_query_string": {
+            "query": "電腦 電競",
+            "fields": [
+              "name^1.0",
+              "brand^1.0",
+              "description_cleaned^1.0",
+              "attributes.value^1.0",
+              "terms.keyword^1.0",
+              "product_types^1.0"
+            ]
+          }
+        }
+      ],
+      "filter": [
+        {
+          "range": {
+            "price": {
+              "gte": 1,
+              "lte": 10000000000
+            }
+          }
+        }
+      ]
+    }
+  },
+  "track_scores": true,
+  "sort": [
+    {
+      "_score": "desc"
+    },
+    {
+      "availability_type": "asc"
+    }
+  ],
+  "from": 0,
+  "size": 20
+}
