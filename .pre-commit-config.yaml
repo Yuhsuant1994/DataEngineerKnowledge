@@ -9,16 +9,33 @@ repos:
   - id: check-toml
   - id: end-of-file-fixer
 
+# - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+#   rev: v2.1.0
+#   hooks:
+#   - id: pretty-format-yaml
+#     args:
+#     - --autofix
+#     - --preserve-quotes
+#     - --indent=2
+
+# - repo: https://github.com/psf/black
+#   rev: 19.3b0
+#   hooks:
+#     - id: black
+# - repo: https://gitlab.com/pycqa/flake8
+#   rev: 3.7.9
+#   hooks:
+#     - id: flake8
 - repo: local
   hooks:
   - id: isort
     name: isort
-    entry: poetry run isort
+    entry: poetry --directory ./ run isort
     language: system
     types: [python]
 
   - id: black
     name: Format with Black
-    entry: poetry run black
+    entry: poetry --directory ./ run black
     language: system
     types: [python]
