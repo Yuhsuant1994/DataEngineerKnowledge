@@ -18,16 +18,16 @@ repos:
     - --preserve-quotes
     - --indent=2
 
-# - repo: local
-#   hooks:
-#   - id: isort
-#     name: isort
-#     entry: poetry --directory backend/app run isort
-#     language: system
-#     types: [python]
+- repo: local
+  hooks:
+  - id: isort
+    name: isort
+    entry: poetry --directory backend/app run isort
+    language: system
+    types: [python]
 
-#   - id: black
-#     name: Format with Black
-#     entry: poetry --directory backend/app run black
-#     language: system
-#     types: [python]
+  - id: black
+    name: Format with Black
+    entry: poetry --directory backend/app run black
+    language: system
+    types: [python]
