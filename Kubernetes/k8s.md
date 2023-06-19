@@ -82,7 +82,7 @@ kubectl set image deployment test-k8s test-k8s=ccr.ccs.tencentyun.com/k8s-tutori
 ---
 ## 數據持久化
 重啟DB `kubectl rollout restart statefulset mangodb` 資料會不見 可以掛一個storage location, local path, or cloud
-* persistent volumn,(hostPath 挂载) 只適合用於single node (like minikube)
+1.  (不推薦)persistent volumn,(hostPath 挂载) 只適合用於single node (like minikube)
 ```
 # mongo.yaml, kubectl apply -f mongo.yaml
 ....
@@ -95,8 +95,10 @@ kubectl set image deployment test-k8s test-k8s=ccr.ccs.tencentyun.com/k8s-tutori
 
 ```
 in mongodb
+> use test
 > show dbs
 > db.user.save({'_id':'testid', 'name':'hsuan'})
 > db.user.find()
 { "_id" : "testid", "name" : "hsuan" }
 ```
+2. storage class, persistence volumne, persistence volumne claim
