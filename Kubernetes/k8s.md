@@ -56,6 +56,8 @@ kubectl set image deployment test-k8s test-k8s=ccr.ccs.tencentyun.com/k8s-tutori
 ---
 ## Services use label for pod
 
+Service 提供一個不變的 IP 地址和 DNS 名稱，以供其他物件（如 Pods）連接到您的應用程式。
+
 `kubectl apply -f service.yaml` (name should be linked to deployment names)
 
 * Service 通过 label 关联对应的 Pod
@@ -82,7 +84,7 @@ kubectl set image deployment test-k8s test-k8s=ccr.ccs.tencentyun.com/k8s-tutori
 ---
 ## 數據持久化
 重啟DB `kubectl rollout restart statefulset mangodb` 資料會不見 可以掛一個storage location, local path, or cloud
-1.  (不推薦)persistent volumn,(hostPath 挂载) 只適合用於single node (like minikube)
+1.  (不推薦)persistent volumn,(hostPath 挂载) 只適合用於single node (like minikube) [example link](test_k8s/yaml/deployment/mongo.yaml)
 ```
 # mongo.yaml, kubectl apply -f mongo.yaml
 ....
@@ -101,4 +103,126 @@ in mongodb
 > db.user.find()
 { "_id" : "testid", "name" : "hsuan" }
 ```
-2. storage class, persistence volumne, persistence volumne claim
+2. `storage class`, `persistence volumne`, `persistence volumne claim`: in cloud service we would only need to create persistence volumne clain, and they would create the PV and storage class for us directly. (we can then connect this storage PVC to the `statefulset`)
+
+however local file we need to define ourselves. 不支持動態創建[example link](test_k8s/yaml/deployment/mongo_pvc.yaml)
+
+---
+
+## confimap & secret
+
+數據庫的path 不應該寫死在檔案裡面應該要用[kind: ConfigMap ](test_k8s/yaml/deployment/configmap.yaml)去設置
+
+```
+{url = 'mongodb://mongodb-0.mongodb:27017'
+url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_ADDRESS}`}
+```
+
+還有[kind: Secret](test_k8s/yaml/deployment/secret.yaml)
+
+* `kubectl apply -f configmap.yaml`, `kubectl apply -f secret.yaml`
+* `kubectl get configmap mongo-config -o yaml`, `kubectl get secret mongo-secret -o yaml`
+
+---
+## namespace (ns)
+劃分空間使用 `kubectl get ns`,
+
+* `kubectl get all -n kube-system` : check name space detail,
+* `kubectl create namespace {testapp}`  after we create the name space we can then apply the app `kubecl apply -f deployment.yaml --namespace testapp`
+* `kubectl get pod --namespace testapp` 查詢時要指定的命名空間才會查詢得到
+
+*可以透過 `kubens` 套件快速切換命名空間*
+
+---
+## Ingress: 為外部訪問集群提供統一的入口（避免為外部暴露端口）
+
+需要配合一個cloud service的load balancer + ingress controler, 可以設置不同域名轉發流量到不同service 執行不同pods的工作. Can have domain name and https.
+
+### load balancer example:
+
+```
+apiVersion:v1
+kind: Service
+metadata:
+  name: myapp-External-service
+spec:
+  selector:
+    app: myapp
+  type: LoadBalancer #open it to public
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      # external access port
+      nodePort: 35010
+```
+* port: 8080 表示其他 Pods 或 Service 可以在 8080 端口上訪問該 Service。
+* targetPort: 8080 表示該 Service 會將流量轉發到選定的 Pods 上的 8080 端口。
+* nodePort: 35010 表示你可以直接使用任何節點的 IP 地址，並在 35010 端口上訪問該 Service，然後 Kubernetes 會將該流量轉發到相應的 Service 和 Pod。
+
+### example with ingress (add TLS certificate)
+
+```
+# to configure TLS
+apiVersion: v1
+kind: Secret
+metadataL
+  name: myapp-secret-tls
+  # same namespace as ingress
+  namespace: defult
+data:
+  tls.crt: base64 encoded cert
+  tls.key: base64 encoded key
+type: kuberbets.io/tls
+```
+
+```
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: myapp-ingress
+spec:
+  # https
+  tls:
+  - hosts:
+    - myapp.com
+    secretName: myapp-secret-tls
+  rules:
+  - host: myapp.com
+    http:
+      path:
+      - backend:
+          serviceName: myapp-internal-service
+          # correspond to the port from the service file
+          servicePort: 8080
+```
+
+* rules: Router rules: forward request from "myapp.com" to interal service
+* host: should be valid domain address and map it to the entrypoint node IP address
+
+```
+ex:
+apiVersion:v1
+kind: Service
+metadata:
+  name: myapp-internal-service
+spec:
+  selector:
+    app: myapp
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+```
+
+* no nodePort
+* instead of Loadbalancer type we use defult type ClusterIp
+
+### before setting up
+
+we need to install **Ingress Controller** pod, one of them is **K8s Nginx Ingress Controller**. if we are using cloud service, the external requests would first hit the **Cloud Load Balancer** then it would redirect the traffic to ingress controller. (load balancer would be auto implemented on the cloud.)
+
+### ingress on Minikube
+
+* install ingress controller in minikube `minikube addons enable ingress`
+* `kubectl get pod -n kube-system`: we can see nginx

@@ -16,17 +16,16 @@ spec:
     spec:
       containers:
       - name: mongo
-        image: mongo:4.4
-          # IfNotPresent 仅本地没有镜像时才远程拉，Always 永远都是从远程拉，Never 永远只用本地镜像，本地没有则报错
+        image: mongo:4.4  # Corrected indentation
         imagePullPolicy: IfNotPresent
         volumeMounts:
-        - mountPath: /data/db     # 容器里面的挂载路径
-          name: mongo-data        # 卷名字，必须跟下面定义的名字一致
+        - mountPath: /data/db     # Container mount path
+          name: mongo-data        # Volume name, must match the name defined below
       volumes:
-      - name: mongo-data                # 卷名字
+      - name: mongo-data                # Volume name
         hostPath:
-          path: /data/mongo-data        # 节点上的路径
-          type: DirectoryOrCreate       # 指向一个目录，不存在时自动创建
+          path: /data/mongo-data        # Node path
+          type: DirectoryOrCreate       # Points to a directory, creates it if it doesn't exist
 ---
 apiVersion: v1
 kind: Service
@@ -35,9 +34,8 @@ metadata:
 spec:
   selector:
     app: mongodb
-  type: ClusterIP
-  # HeadLess
-  clusterIP: None
   ports:
   - port: 27017
+    protocol: TCP
     targetPort: 27017
+  type: ClusterIP  # Removed duplicate fields
