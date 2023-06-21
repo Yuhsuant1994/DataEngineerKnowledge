@@ -1,4 +1,4 @@
-# Kubernets
+# Kubernetes
 check test-k8s repository
 
 source (chinese)
@@ -15,7 +15,7 @@ addition
 * current running process `ps aux | grep "kubectl port-forward"`, `kill -9 {id}`
 
 ## setup minikube
-* 加結點 `minikube node add [--worker]`
+* 加節點 `minikube node add [--worker]`
 * start service `minikube start`
 
 ## run app
