@@ -1,0 +1,92 @@
+search_api/backend/cache/*
+elastic_search/data_prepare/cache/*
+.vscode
+.mypy_cache
+docker-stack.yml
+
+__pycache__
+__pycache__/*
+.git
+.DS_Store
+**/__pycache__/*
+ci.env
+*jpg
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+.idea/*
+# *.ipynb
+*.json
+# *.csv
+# *.pdf
+# *.html
+*.pkl
+*.pickle
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+# env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Emacs
+.#*
+
+# Notebook Checkpoints
+.ipynb_checkpoints/
+
+# vscode
+.vscode/*
+.vscode
+
+#ENV
+.env
