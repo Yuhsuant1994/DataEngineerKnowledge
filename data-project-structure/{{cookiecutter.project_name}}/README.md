@@ -3,7 +3,7 @@ Author: {{cookiecutter.author}}
 
 Project Structure:
 
-
+```
 ├── Makefile                     <- Makefile with commands like `make data` or `make train`
 ├── README.md                    <- The top-level README for developers using this project.
 ├── data
@@ -33,3 +33,4 @@ Project Structure:
 |                                   for flake8 and black
 └── .gitignore                   <- Git ignores file extensions and folders mentioned here
                                     e.g. *.pyc, *.csv
+```
