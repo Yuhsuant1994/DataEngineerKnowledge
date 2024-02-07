@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: dbt_demo_set  # This can be your database schema name or any logical grouping name
+    tables:
+      - name: users
+        database: test_db  # Optional, specify if different from the default database in your dbt profile
+      - name: sales
+
+models:
+  - name: user_model  # The name of your model
+    description: "A table of users, including their ids, names, and emails."  # Optional: Document what this model represents
+    columns:
+      - name: id
+        description: "The unique identifier for a user"  # Optional: Document each column
+        tests:
+          - unique
+          - not_null
+
+      - name: name
+        description: "The name of the user"
+        tests:
+          - not_null
+
+      - name: email
+        description: "The user's email address"
+        tests:
+          - unique
+          - not_null
+          - email_validation: # macro
+              column_name: email

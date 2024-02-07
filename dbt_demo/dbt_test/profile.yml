@@ -1,0 +1,11 @@
+dbt_demo:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: test
+      pass: test
+      port: 5432
+      dbname: test_db
+      schema: dbt_demo_set
