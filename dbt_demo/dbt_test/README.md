@@ -37,3 +37,6 @@ This project demonstrates the advantages of using dbt for data transformation, i
 - dbt run use case: creating view / tables, Incremental Updates (incremental materialization), Triggers and Updates
 - `macros` test: {% macro test_email_validation(model, column_name) %}, it auto detect the name after test_
 - if test failed, we need action to roll back or fix the issue, not include in dbt services 
+
+
+[Introducing dbt Exposures for Hightouch](https://www.youtube.com/watch?v=DWVg-vxhwY8)
