@@ -1,0 +1,13 @@
+
+0 8 * * * python3 /Users/user/nwd_ig_crawler/scheduler/clean_account_in_use.py
+
+
+# Run pm_crawler.sh at 12:05 AM every day
+8 0 * * * /Users/user/nwd_ig_crawler/scheduler/dc_crawler.sh
+
+# Run dc_crawler.sh at 12:05 AM every day, immediately after pm_crawler.sh
+10 0 * * * /Users/user/nwd_ig_crawler/scheduler/pm_crawler.sh
+
+
+0 8 * * * python3 /Users/user/nwd_ig_crawler/scheduler/clean_old_files.py
+
