@@ -1,2 +1,0 @@
-[console_scripts]
-bentoml = bentoml_cli.cli:cli
