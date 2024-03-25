@@ -1,0 +1,11 @@
+service: "service.py:svc"
+labels:
+  owner: yuhsuan
+  project: bentoml_demo
+include:
+- "*.py"
+python:
+  packages:
+    - scikit-learn
+    - pandas
+    - openllm[vllm]
