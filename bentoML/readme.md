@@ -23,6 +23,7 @@ Next steps:
 
 * Containerize your Bento with `bentoml containerize`:
     $ bentoml containerize iris_classifier:zmqsxlhgs2k3duud [or bentoml build --containerize]
+    $ bentoml containerize iris_classifier:latest 
 
 
 # run docker locally
@@ -32,8 +33,8 @@ docker run -d \
   --network=bridge \
   --name bento-demo \
   -p 8080:3000 \
-  -v
   iris_classifier:zmqsxlhgs2k3duud
+
 ```
 
 ## how to run on GCP cloud run
